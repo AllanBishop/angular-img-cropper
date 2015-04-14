@@ -8,7 +8,7 @@ An HTML5 image cropping tool for AngularJS. Features a rectangular crop area. Th
 
 ## Live demo
 
-[Live demo on JSBin](http://jsbin.com/pajiha/3/edit?html,js,output)
+[Live demo on JSBin](http://jsbin.com/noluju/9/edit?html,js,output)
 
 ## Requirements
 
@@ -18,7 +18,7 @@ An HTML5 image cropping tool for AngularJS. Features a rectangular crop area. Th
 
 ### Download
 
-- [Download Angular-Cropper](https://github.com/AllanBishop/ImageCropper/archive/master.zip) files from GitHub.
+- [Download Angular-Cropper](https://github.com/AllanBishop/angular-cropper/archive/master.zip) files from GitHub.
 
 Or
 
