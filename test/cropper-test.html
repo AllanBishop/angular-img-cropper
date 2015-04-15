@@ -9,7 +9,7 @@
 </head>
 <body ng-app="app">
   <div ng-controller="ImageCropperCtrl as ctrl">
-    <input type="file" fileread image="cropper.sourceImage" />
+    <input type="file" img-cropper-fileread image="cropper.sourceImage" />
     <div>
       <canvas width="500" height="300" id="canvas" image-cropper image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="400" crop-height="200" keep-aspect="true"></canvas>
     </div>

@@ -1008,7 +1008,7 @@ angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document'
     };
 }]);
 
-angular.module('angular-img-cropper').directive("fileread", ['$timeout',function ($timeout) {
+angular.module('angular-img-cropper').directive("imgCropperFileread", ['$timeout',function ($timeout) {
     return {
         scope: {
             image: "="

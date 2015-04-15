@@ -8,7 +8,7 @@ An image cropping tool for AngularJS. Features a rectangular crop area. The crop
 
 ## Live demo
 
-[Live demo on JSBin](http://jsbin.com/moyolakalo/1/edit?html,js,output)
+[Live demo on JSBin](http://jsbin.com/qosowa/1/edit?html,js,output)
 
 ## Requirements
 
@@ -73,7 +73,7 @@ angular.module('myApp', [angular-img-cropper]);
 </head>
 <body ng-app="myApp">
     <div ng-controller="ImageCropperCtrl as ctrl">
-        <input type="file" fileread image="cropper.sourceImage" />
+        <input type="file" img-cropper-fileread image="cropper.sourceImage" />
         <div>
              <canvas width="500" height="300" id="canvas" image-cropper image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="400" crop-height="200" keep-aspect="true" touch-radius="30"></canvas>
         </div>
