@@ -1,5 +1,4 @@
-
-angular.module('angular-cropper',[]).directive("cropper",  ['$document','$window', function($document,$window)
+angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document','$window', function($document,$window)
 {
   return {
         scope: {
@@ -540,7 +539,6 @@ angular.module('angular-cropper',[]).directive("cropper",  ['$document','$window
 
                     if(newCropTouch==null)
                     {
-                        console.log("Release null");
                         return;
                     }
                     var index = 0;
@@ -925,7 +923,6 @@ angular.module('angular-cropper',[]).directive("cropper",  ['$document','$window
                     }
                 };
                 ImageCropper.prototype.onMouseUp = function (e) {
-                    console.log("MouseUp");
                     this.handleRelease(new CropTouch(0, 0, 0));
                     if (this.currentDragTouches.length == 0) {
                         this.isMouseDown = false;
@@ -1011,7 +1008,7 @@ angular.module('angular-cropper',[]).directive("cropper",  ['$document','$window
     };
 }]);
 
-angular.module('angular-cropper').directive("fileread", ['$timeout',function ($timeout) {
+angular.module('angular-img-cropper').directive("fileread", ['$timeout',function ($timeout) {
     return {
         scope: {
             image: "="

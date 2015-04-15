@@ -8,14 +8,14 @@ module.exports = function (grunt) {
       },
       dist: {
         files: {
-          'dist/<%= pkg.name %>.min.js': ['src/angular-cropper.js']
+          'dist/<%= pkg.name %>.min.js': ['src/angular-img-cropper.js']
         }
       }
     },
     copy: {
       source: {
         cwd: 'src',
-        src: [ 'angular-cropper.js' ],
+        src: [ 'angular-img-cropper.js' ],
         dest: 'src',
         expand: true
       },

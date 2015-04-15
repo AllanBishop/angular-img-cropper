@@ -1,1 +1,1 @@
-angular.module('app', ['angular-cropper']);
+angular.module('app', ['angular-img-cropper']);
