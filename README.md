@@ -8,7 +8,7 @@ An image cropping tool for AngularJS. Features a rectangular crop area. The crop
 
 ## Live demo
 
-[Live demo on JSBin](http://jsbin.com/noluju/9/edit?html,js,output)
+[Live demo on JSBin](http://jsbin.com/moyolakalo/1/edit?html,js,output)
 
 ## Requirements
 
