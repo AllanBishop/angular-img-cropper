@@ -63,11 +63,9 @@ angular.module('myApp', [angular-img-cropper]);
     
     angular.module('myApp').controller("ImageCropperCtrl",[ '$scope', function($scope) 
     {
-        $scope.img = {};
-        $scope.img.uncroppedImage = null;
-        $scope.img.croppedImage   = null;
-        $scope.image = {};
-        $scope.image.source = null;
+        $scope.cropper = {};
+        $scope.cropper.sourceImage = null;
+        $scope.cropper.croppedImage   = null;
     }]);
 </script>
 <meta charset="utf-8">
@@ -77,7 +75,7 @@ angular.module('myApp', [angular-img-cropper]);
     <div ng-controller="ImageCropperCtrl as ctrl">
         <input type="file" fileread image="cropper.sourceImage" />
         <div>
-             <canvas width="500" height="300" id="canvas" image-cropper image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="400" crop-height="200" keep-aspect="true" touch-radius="30">              </canvas>
+             <canvas width="500" height="300" id="canvas" image-cropper image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="400" crop-height="200" keep-aspect="true" touch-radius="30"></canvas>
         </div>
         <div>Cropped Image:</div>
         <div ng-show="cropper.croppedImage!=null"><img ng-src="{{cropper.croppedImage}}" /></div>

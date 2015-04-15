@@ -9,12 +9,12 @@
 </head>
 <body ng-app="app">
   <div ng-controller="ImageCropperCtrl as ctrl">
-    <input type="file" fileread image="image.source" />
+    <input type="file" fileread image="cropper.sourceImage" />
     <div>
-      <canvas width="500" height="300" id="canvas" image-cropper image="image.source" cropped-image="img.croppedImage" crop-width="400" crop-height="200" keep-aspect="true"></canvas>
+      <canvas width="500" height="300" id="canvas" image-cropper image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="400" crop-height="200" keep-aspect="true"></canvas>
     </div>
 <div>Cropped Image:</div>
-<div ng-show="img.croppedImage!=null"><img ng-src="{{img.croppedImage}}" /></div>
+<div ng-show="cropper.croppedImage!=null"><img ng-src="{{cropper.croppedImage}}" /></div>
   </div>
 
 </body>
