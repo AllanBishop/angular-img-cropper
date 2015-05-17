@@ -618,11 +618,10 @@ angular.module('angular-img-cropper',[]).directive("imageCropper",  ['$document'
                 ImageCropper.prototype.getCropBounds = function () {
                     var h = this.canvas.height - (this.minYClamp * 2);
                     var bounds = this.getBounds();
-                    bounds.top = Math.round(h - bounds.top + this.minYClamp);
-                    bounds.bottom = Math.round(h - bounds.bottom + this.minYClamp);
-                    bounds.left = Math.round(bounds.left-this.minXClamp);
-                    bounds.right = Math.round(bounds.right-this.minXClamp);
-
+                    bounds.top = Math.round((h - bounds.top + this.minYClamp)/this.ratioH);
+                    bounds.bottom = Math.round((h - bounds.bottom + this.minYClamp)/this.ratioH);
+                    bounds.left = Math.round((bounds.left-this.minXClamp)/this.ratioW);
+                    bounds.right = Math.round((bounds.right-this.minXClamp)/this.ratioW);
                     return bounds;
                 };
                 ImageCropper.prototype.clampPosition = function (x, y) {
