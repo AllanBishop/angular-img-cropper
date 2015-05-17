@@ -8,7 +8,7 @@ An image cropping tool for AngularJS. Features a rectangular crop area. The crop
 
 ## Live demo
 
-[Live demo on JSBin](http://jsbin.com/qosowa/2/edit?html,js,output)
+[Live demo on JSBin](http://jsbin.com/wapotedeja/1/)
 
 ## Requirements
 
@@ -45,8 +45,9 @@ angular.module('myApp', [angular-img-cropper]);
 | crop-height | The height of the crop area|
 | image | The source image to crop|
 | cropped-image | The cropped image|
-| keepAspect   | Enforces that the aspect ratio is kept when dragging the crop area. The aspect ratio is defined by the width and height paramater. |
-| touchRadius  | The radius for detecting touches/clicks on the corner drag markers and the centre drag marker. |
+| keep-aspect   | Enforces that the aspect ratio is kept when dragging the crop area. The aspect ratio is defined by the width and height paramater. |
+| touch-radius  | The radius for detecting touches/clicks on the corner drag markers and the centre drag marker. |
+| crop-area-bounds  | A model that will be automatically updated with the bounds of the crop area relative to the image. |
 
 ## Example usage
 
@@ -66,6 +67,11 @@ angular.module('myApp', [angular-img-cropper]);
         $scope.cropper = {};
         $scope.cropper.sourceImage = null;
         $scope.cropper.croppedImage   = null;
+        $scope.bounds = {};
+        $scope.bounds.left = 0;
+        $scope.bounds.right = 0;
+        $scope.bounds.top = 0;
+        $scope.bounds.bottom = 0;
     }]);
 </script>
 <meta charset="utf-8">
@@ -75,9 +81,9 @@ angular.module('myApp', [angular-img-cropper]);
     <div ng-controller="ImageCropperCtrl as ctrl">
         <input type="file" img-cropper-fileread image="cropper.sourceImage" />
         <div>
-             <canvas width="500" height="300" id="canvas" image-cropper image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="400" crop-height="200" keep-aspect="true" touch-radius="30"></canvas>
+             <canvas width="500" height="300" id="canvas" image-cropper image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="400" crop-height="200" keep-aspect="true" touch-radius="30" crop-area-bounds="bounds"></canvas>
         </div>
-        <div>Cropped Image:</div>
+        <div>Cropped Image (Left: {{bounds.left}} Right: {{bounds.right}} Top: {{bounds.top}} Bottom: {{bounds.bottom}})</div>
         <div ng-show="cropper.croppedImage!=null"><img ng-src="{{cropper.croppedImage}}" /></div>
     </div>
 </body>
