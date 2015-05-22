@@ -47,7 +47,7 @@ angular.module('myApp', [angular-img-cropper]);
 | cropped-image | The cropped image|
 | keep-aspect   | Enforces that the aspect ratio is kept when dragging the crop area. The aspect ratio is defined by the width and height paramater. |
 | touch-radius  | The radius for detecting touches/clicks on the corner drag markers and the centre drag marker. |
-| crop-area-bounds  | A model that will be automatically updated with the bounds (left, right, top, bottom) of the crop area relative to the original source image. |
+| crop-area-bounds (*optional*) | A model that will be automatically updated with the bounds (left, right, top, bottom) of the crop area relative to the original source image.
 
 ## Example usage
 
