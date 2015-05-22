@@ -376,6 +376,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.aspectRatio = height / width;
                     this.draw(this.ctx);
                     this.croppedImage = new Image();
+                    this.currentlyInteracting = false;
                     window.addEventListener('mousemove', this.onMouseMove.bind(this));
                     window.addEventListener('mouseup', this.onMouseUp.bind(this));
                     canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
@@ -607,6 +608,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                             else {
                                 this.dragCrop(newCropTouch.x, newCropTouch.y, dragTouch.dragHandle);
                             }
+                            this.currentlyInteracting = true;
                             matched = true;
                             imageCropperDataShare.setPressed(this.canvas);
                             break;
@@ -960,13 +962,16 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                             this.handleRelease(dragTouch);
                         }
                     }
-                    if (this.currentDragTouches.length == 0) {
-                        this.isMouseDown = false;
-                    }
-                    if (crop.isImageSet()) {
+
+                    if (crop.isImageSet() && this.currentlyInteracting) {
                         var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
                         scope.croppedImage = img.src;
                         scope.$apply();
+                    }
+
+                    if (this.currentDragTouches.length == 0) {
+                        this.isMouseDown = false;
+                        this.currentlyInteracting = false;
                     }
                 };
                 //http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
@@ -1009,9 +1014,13 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         imageCropperDataShare.setReleased(this.canvas);
                         this.isMouseDown = false;
                         this.handleRelease(new CropTouch(0, 0, 0));
-                        var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
-                        scope.croppedImage = img.src;
-                        scope.$apply();
+
+                        if(this.currentlyInteracting==true) {
+                            var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
+                            scope.croppedImage = img.src;
+                            scope.$apply();
+                        }
+                        this.currentlyInteracting = false;
                     }
                 };
 
