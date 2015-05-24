@@ -1087,30 +1087,30 @@ angular.module('angular-img-cropper').factory("imageCropperDataShare", function 
     var over;
     share.setPressed = function (canvas) {
         pressed = canvas;
-    }
+    };
 
     share.setReleased = function (canvas) {
-        if (canvas == pressed) {
+        if (canvas === pressed) {
             pressed = undefined;
         }
-    }
+    };
 
     share.setOver = function (canvas) {
         over = canvas;
-    }
+    };
 
     share.setStyle = function (canvas, style) {
-        if (pressed != undefined) {
-            if (pressed == canvas) {
+        if (pressed !== undefined) {
+            if (pressed === canvas) {
                 angular.element(document.documentElement).css('cursor', style);
             }
         }
         else {
-            if (canvas == over) {
+            if (canvas === over) {
                 angular.element(document.documentElement).css('cursor', style);
             }
         }
-    }
+    };
 
     return share;
 
