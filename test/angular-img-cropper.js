@@ -858,19 +858,22 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.draw(this.ctx);
                 };
                 ImageCropper.prototype.onMouseMove = function (e) {
-                    var mousePosition = this.getMousePos(this.canvas, e);
-                    this.move(new CropTouch(mousePosition.x, mousePosition.y, 0), e);
-                    var dragTouch = this.getDragTouchForID(0);
-                    if (dragTouch) {
-                        dragTouch.x = mousePosition.x;
-                        dragTouch.y = mousePosition.y;
+
+                    if (crop.isImageSet()) {
+                        var mousePosition = this.getMousePos(this.canvas, e);
+                        this.move(new CropTouch(mousePosition.x, mousePosition.y, 0), e);
+                        var dragTouch = this.getDragTouchForID(0);
+                        if (dragTouch) {
+                            dragTouch.x = mousePosition.x;
+                            dragTouch.y = mousePosition.y;
+                        }
+                        else {
+                            dragTouch = new CropTouch(mousePosition.x, mousePosition.y, 0);
+                        }
+                        PointPool.instance.returnPoint(mousePosition);
+                        this.drawCursors(dragTouch, e);
+                        this.draw(this.ctx);
                     }
-                    else {
-                        dragTouch = new CropTouch(mousePosition.x, mousePosition.y, 0);
-                    }
-                    PointPool.instance.returnPoint(mousePosition);
-                    this.drawCursors(dragTouch, e);
-                    this.draw(this.ctx);
                 };
                 ImageCropper.prototype.move = function (cropTouch, e) {
                     if (this.isMouseDown) {
@@ -1007,7 +1010,9 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     return (ratio === 0) ? 1 : ratio;
                 };
                 ImageCropper.prototype.onMouseDown = function (e) {
-                    this.isMouseDown = true;
+                    if(crop.isImageSet()) {
+                        this.isMouseDown = true;
+                    }
                 };
                 ImageCropper.prototype.onMouseUp = function (e) {
                     if (crop.isImageSet()) {
