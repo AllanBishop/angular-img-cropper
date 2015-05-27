@@ -845,17 +845,19 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     return PointPool.instance.borrow(touch.clientX - rect.left, touch.clientY - rect.top);
                 };
                 ImageCropper.prototype.onTouchMove = function (e) {
-                    e.preventDefault();
-                    if (e.touches.length >= 1) {
-                        for (var i = 0; i < e.touches.length; i++) {
-                            var touch = e.touches[i];
-                            var touchPosition = this.getTouchPos(this.canvas, touch);
-                            var cropTouch = new CropTouch(touchPosition.x, touchPosition.y, touch.identifier);
-                            PointPool.instance.returnPoint(touchPosition);
-                            this.move(cropTouch, e);
+                    if (crop.isImageSet()) {
+                        e.preventDefault();
+                        if (e.touches.length >= 1) {
+                            for (var i = 0; i < e.touches.length; i++) {
+                                var touch = e.touches[i];
+                                var touchPosition = this.getTouchPos(this.canvas, touch);
+                                var cropTouch = new CropTouch(touchPosition.x, touchPosition.y, touch.identifier);
+                                PointPool.instance.returnPoint(touchPosition);
+                                this.move(cropTouch, e);
+                            }
                         }
+                        this.draw(this.ctx);
                     }
-                    this.draw(this.ctx);
                 };
                 ImageCropper.prototype.onMouseMove = function (e) {
 
@@ -952,29 +954,33 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     return false;
                 };
                 ImageCropper.prototype.onTouchStart = function (e) {
-                    this.isMouseDown = true;
+                    if (crop.isImageSet()) {
+                        this.isMouseDown = true;
+                    }
                 };
                 ImageCropper.prototype.onTouchEnd = function (e) {
-                    for (var i = 0; i < e.changedTouches.length; i++) {
-                        var touch = e.changedTouches[i];
-                        var dragTouch = this.getDragTouchForID(touch.identifier);
-                        if (dragTouch != null) {
-                            if (dragTouch.dragHandle instanceof CornerMarker || dragTouch.dragHandle instanceof DragMarker) {
-                                dragTouch.dragHandle.setOver(false);
+                    if (crop.isImageSet()) {
+                        for (var i = 0; i < e.changedTouches.length; i++) {
+                            var touch = e.changedTouches[i];
+                            var dragTouch = this.getDragTouchForID(touch.identifier);
+                            if (dragTouch != null) {
+                                if (dragTouch.dragHandle instanceof CornerMarker || dragTouch.dragHandle instanceof DragMarker) {
+                                    dragTouch.dragHandle.setOver(false);
+                                }
+                                this.handleRelease(dragTouch);
                             }
-                            this.handleRelease(dragTouch);
                         }
-                    }
 
-                    if (crop.isImageSet() && this.currentlyInteracting) {
-                        var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
-                        scope.croppedImage = img.src;
-                        scope.$apply();
-                    }
+                        if (crop.isImageSet() && this.currentlyInteracting) {
+                            var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
+                            scope.croppedImage = img.src;
+                            scope.$apply();
+                        }
 
-                    if (this.currentDragTouches.length == 0) {
-                        this.isMouseDown = false;
-                        this.currentlyInteracting = false;
+                        if (this.currentDragTouches.length == 0) {
+                            this.isMouseDown = false;
+                            this.currentlyInteracting = false;
+                        }
                     }
                 };
                 //http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
