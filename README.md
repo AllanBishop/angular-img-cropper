@@ -8,7 +8,7 @@ An image cropping tool for AngularJS. Features a rectangular crop area. The crop
 
 ## Live demo
 
-[Live demo on JSBin](http://jsbin.com/fukeqe/4/)
+[Live demo on JSBin](http://jsbin.com/fukeqe/6/)
 
 ## Requirements
 
@@ -48,6 +48,8 @@ angular.module('myApp', [angular-img-cropper]);
 | keep-aspect   | Enforces that the aspect ratio is kept when dragging the crop area. The aspect ratio is defined by the width and height paramater. |
 | touch-radius  | The radius for detecting touches/clicks on the corner drag markers and the centre drag marker. |
 | crop-area-bounds (*optional*) | A model that will be automatically updated with the bounds (left, right, top, bottom) of the crop area relative to the original source image.
+| crop-width (*optional*) | The minimum width that the crop area can be set to.
+| crop-height (*optional*) | The minimum height that the crop area can be set to.
 
 ## Example usage
 

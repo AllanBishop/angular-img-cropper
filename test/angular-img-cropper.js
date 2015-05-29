@@ -7,7 +7,9 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
             cropHeight: "=",
             keepAspect: "=",
             touchRadius: "=",
-            cropAreaBounds: "="
+            cropAreaBounds: "=",
+            minWidth: "@",
+            minHeight: "@"
         },
         restrict: "A",
         link: function (scope, element) {
@@ -468,6 +470,141 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         scope.$apply();
                     }
                 };
+
+                ImageCropper.prototype.enforceMinSize = function (x, y, marker) {
+
+                    var xLength = x - marker.getHorizontalNeighbour().getPosition().x;
+                    var yLength = y - marker.getVerticalNeighbour().getPosition().y;
+                    var xOver = scope.minWidth - Math.abs(xLength);
+                    var yOver = scope.minHeight - Math.abs(yLength);
+
+                    if (xLength == 0 || yLength == 0) {
+                        x = marker.getPosition().x;
+                        y = marker.getPosition().y;
+
+                        return PointPool.instance.borrow(x, y);
+                    }
+
+                    if(scope.keepAspect) {
+                        if (xOver > 0 && (yOver / this.aspectRatio) > 0) {
+                            if (xOver > (yOver / this.aspectRatio)) {
+                                if (xLength < 0) {
+                                    x -= xOver;
+
+                                    if (yLength < 0) {
+                                        y -= xOver * this.aspectRatio;
+                                    }
+                                    else {
+                                        y += xOver * this.aspectRatio;
+                                    }
+                                }
+                                else {
+                                    x += xOver;
+                                    if (yLength < 0) {
+                                        y -= xOver * this.aspectRatio;
+                                    }
+                                    else {
+                                        y += xOver * this.aspectRatio;
+                                    }
+                                }
+                            }
+                            else {
+                                if (yLength < 0) {
+                                    y -= yOver;
+
+                                    if (xLength < 0) {
+                                        x -= yOver / this.aspectRatio;
+                                    }
+                                    else {
+                                        x += yOver / this.aspectRatio;
+                                    }
+
+                                }
+                                else {
+                                    y += yOver;
+                                    if (xLength < 0) {
+                                        x -= yOver / this.aspectRatio;
+                                    }
+                                    else {
+                                        x += yOver / this.aspectRatio;
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            if (xOver > 0) {
+                                if (xLength < 0) {
+                                    x -= xOver;
+
+                                    if (yLength < 0) {
+                                        y -= xOver * this.aspectRatio;
+                                    }
+                                    else {
+                                        y += xOver * this.aspectRatio;
+                                    }
+                                }
+                                else {
+                                    x += xOver;
+                                    if (yLength < 0) {
+                                        y -= xOver * this.aspectRatio;
+                                    }
+                                    else {
+                                        y += xOver * this.aspectRatio;
+                                    }
+                                }
+                            }
+                            else if (yOver > 0) {
+                                if (yLength < 0) {
+                                    y -= yOver;
+
+                                    if (xLength < 0) {
+                                        x -= yOver / this.aspectRatio;
+                                    }
+                                    else {
+                                        x += yOver / this.aspectRatio;
+                                    }
+                                }
+                                else {
+                                    y += yOver;
+                                    if (xLength < 0) {
+                                        x -= yOver / this.aspectRatio;
+                                    }
+                                    else {
+                                        x += yOver / this.aspectRatio;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(xOver > 0)
+                        {
+                            if (xLength < 0) {
+                                x -= xOver;
+                            }
+                            else {
+                                x += xOver;
+                            }
+                        }
+                        if(yOver > 0)
+                        {
+                            if (yLength < 0) {
+                                y -= yOver;
+                            }
+                            else {
+                                y += yOver;
+                            }
+                        }
+                    }
+
+                    if (x < this.minXClamp || x > this.maxXClamp || y < this.minYClamp || y > this.maxYClamp) {
+                        x = marker.getPosition().x;
+                        y = marker.getPosition().y;
+                    }
+
+                    return PointPool.instance.borrow(x, y);
+                };
                 ImageCropper.prototype.dragCorner = function (x, y, marker) {
                     var iX = 0;
                     var iY = 0;
@@ -479,6 +616,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     var newX = 0;
                     var anchorMarker;
                     var fold = 0;
+
+
                     if (scope.keepAspect) {
                         anchorMarker = marker.getHorizontalNeighbour().getVerticalNeighbour();
                         ax = anchorMarker.getPosition().x;
@@ -493,14 +632,18 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                                     newWidth = newHeight / this.aspectRatio;
                                     newY = anchorMarker.getPosition().y - newHeight;
                                     newX = anchorMarker.getPosition().x - newWidth;
-                                    marker.move(newX, newY);
+                                    var min = this.enforceMinSize(newX, newY, marker);
+                                    marker.move(min.x, min.y);
+                                    PointPool.instance.returnPoint(min);
                                 }
                                 else if (fold < 0) {
                                     newWidth = Math.abs(anchorMarker.getPosition().x - x);
                                     newHeight = newWidth * this.aspectRatio;
                                     newY = anchorMarker.getPosition().y - newHeight;
                                     newX = anchorMarker.getPosition().x - newWidth;
-                                    marker.move(newX, newY);
+                                    var min = this.enforceMinSize(newX, newY, marker);
+                                    marker.move(min.x, min.y);
+                                    PointPool.instance.returnPoint(min);
                                 }
                             }
                             else {
@@ -512,14 +655,18 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                                     newHeight = newWidth * this.aspectRatio;
                                     newY = anchorMarker.getPosition().y + newHeight;
                                     newX = anchorMarker.getPosition().x - newWidth;
-                                    marker.move(newX, newY);
+                                    var min = this.enforceMinSize(newX, newY, marker);
+                                    marker.move(min.x, min.y);
+                                    PointPool.instance.returnPoint(min);
                                 }
                                 else if (fold < 0) {
                                     newHeight = Math.abs(anchorMarker.getPosition().y - y);
                                     newWidth = newHeight / this.aspectRatio;
                                     newY = anchorMarker.getPosition().y + newHeight;
                                     newX = anchorMarker.getPosition().x - newWidth;
-                                    marker.move(newX, newY);
+                                    var min = this.enforceMinSize(newX, newY, marker);
+                                    marker.move(min.x, min.y);
+                                    PointPool.instance.returnPoint(min);
                                 }
                             }
                         }
@@ -533,14 +680,18 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                                     newWidth = newHeight / this.aspectRatio;
                                     newY = anchorMarker.getPosition().y - newHeight;
                                     newX = anchorMarker.getPosition().x + newWidth;
-                                    marker.move(newX, newY);
+                                    var min = this.enforceMinSize(newX, newY, marker);
+                                    marker.move(min.x, min.y);
+                                    PointPool.instance.returnPoint(min);
                                 }
                                 else if (fold > 0) {
                                     newWidth = Math.abs(anchorMarker.getPosition().x - x);
                                     newHeight = newWidth * this.aspectRatio;
                                     newY = anchorMarker.getPosition().y - newHeight;
                                     newX = anchorMarker.getPosition().x + newWidth;
-                                    marker.move(newX, newY);
+                                    var min = this.enforceMinSize(newX, newY, marker);
+                                    marker.move(min.x, min.y);
+                                    PointPool.instance.returnPoint(min);
                                 }
                             }
                             else {
@@ -552,20 +703,26 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                                     newHeight = newWidth * this.aspectRatio;
                                     newY = anchorMarker.getPosition().y + newHeight;
                                     newX = anchorMarker.getPosition().x + newWidth;
-                                    marker.move(newX, newY);
+                                    var min = this.enforceMinSize(newX, newY, marker);
+                                    marker.move(min.x, min.y);
+                                    PointPool.instance.returnPoint(min);
                                 }
                                 else if (fold > 0) {
                                     newHeight = Math.abs(anchorMarker.getPosition().y - y);
                                     newWidth = newHeight / this.aspectRatio;
                                     newY = anchorMarker.getPosition().y + newHeight;
                                     newX = anchorMarker.getPosition().x + newWidth;
-                                    marker.move(newX, newY);
+                                    var min = this.enforceMinSize(newX, newY, marker);
+                                    marker.move(min.x, min.y);
+                                    PointPool.instance.returnPoint(min);
                                 }
                             }
                         }
                     }
                     else {
-                        marker.move(x, y);
+                        var min = this.enforceMinSize(x, y, marker);
+                        marker.move(min.x, min.y);
+                        PointPool.instance.returnPoint(min);
                     }
                     this.center.recalculatePosition(this.getBounds());
 
