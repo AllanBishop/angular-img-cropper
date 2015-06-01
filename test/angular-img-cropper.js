@@ -8,8 +8,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
             keepAspect: "=",
             touchRadius: "=",
             cropAreaBounds: "=",
-            minWidth: "@",
-            minHeight: "@"
+            minWidth: "=",
+            minHeight: "="
         },
         restrict: "A",
         link: function (scope, element) {
