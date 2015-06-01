@@ -33,7 +33,7 @@ bower install angular-img-cropper
 
 Add the image cropper module as a dependancy to your application module:
 ```javascript
-angular.module('myApp', [angular-img-cropper]);
+angular.module('myApp', ['angular-img-cropper']);
 ```
 
 ## Options
