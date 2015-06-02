@@ -1260,11 +1260,9 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                             scope.$apply();
                         }, false);
                         imageObj.src = newValue;
-
                     }
                 }
             );
-
         }
     };
 }]);
@@ -1274,7 +1272,7 @@ angular.module('angular-img-cropper').directive("imgCropperFileread", ['$timeout
         scope: {
             image: "="
         },
-        link: function (scope, element, attributes) {
+        link: function (scope, element) {
             element.bind("change", function (changeEvent) {
                 var reader = new FileReader();
                 reader.onload = function (loadEvent) {
@@ -1286,11 +1284,27 @@ angular.module('angular-img-cropper').directive("imgCropperFileread", ['$timeout
                     reader.readAsDataURL(changeEvent.target.files[0]);
                 }
             });
-
-
         }
     };
 }]);
+
+angular.module('angular-img-cropper').directive('imgCropperFilereadCall', function factory() {
+    return{
+        scope: {
+            control: '='
+        },
+        link : function (scope) {
+            scope.internalControl = scope.control || {};
+            scope.internalControl.load = function(elem) {
+
+                var elemental = angular.element(document.querySelector(elem));
+                var ev = document.createEvent("MouseEvent");
+                ev.initEvent("click", true, false);
+                elemental[0].dispatchEvent(ev);
+            }
+        }
+    };
+});
 
 angular.module('angular-img-cropper').factory("imageCropperDataShare", function () {
     var share = {};
@@ -1322,7 +1336,5 @@ angular.module('angular-img-cropper').factory("imageCropperDataShare", function 
             }
         }
     };
-
     return share;
-
 });
