@@ -1301,7 +1301,7 @@ angular.module('angular-img-cropper').directive('imgCropperFilereadCall', functi
                 var ev = document.createEvent("MouseEvent");
                 ev.initEvent("click", true, false);
                 elemental[0].dispatchEvent(ev);
-            }
+            };
         }
     };
 });
