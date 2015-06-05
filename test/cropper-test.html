@@ -10,7 +10,7 @@
   <div ng-controller="ImageCropperCtrl as ctrl">
     <input type="file" img-cropper-fileread image="cropper.sourceImage" />
     <div>
-      <canvas width="500" height="300" id="canvas" image-cropper image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="400" crop-height="200" min-width="200" min-height="100" keep-aspect="true" crop-area-bounds="bounds"></canvas>
+      <canvas width="500" height="300" id="canvas" image-cropper image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="400" crop-height="200" min-width="100" min-height="50" keep-aspect="true" crop-area-bounds="bounds"></canvas>
     </div>
     <div>Cropped Image (Left: {{bounds.left}} Right: {{bounds.right}} Top: {{bounds.top}} Bottom: {{bounds.bottom}})</div>
     <div ng-show="cropper.croppedImage!=null"><img ng-src="{{cropper.croppedImage}}" /></div>
