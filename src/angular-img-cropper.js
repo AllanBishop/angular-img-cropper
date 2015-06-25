@@ -1249,6 +1249,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                 function (newValue) {
                     if (newValue != null) {
                         var imageObj = new Image();
+                        imageObj.crossOrigin = 'Anonymous';
                         imageObj.addEventListener("load", function () {
 
                             crop.setImage(imageObj);
