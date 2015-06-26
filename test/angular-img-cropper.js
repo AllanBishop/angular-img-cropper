@@ -12,7 +12,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
             minHeight: "="
         },
         restrict: "A",
-        link: function (scope, element) {
+        link: function (scope, element, attrs) {
             var crop;
             var __extends = __extends || function (d, b) {
                     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -1249,6 +1249,9 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                 function (newValue) {
                     if (newValue != null) {
                         var imageObj = new Image();
+                        if(attrs.cors !== undefined && attrs.cors !== "no") {
+                          imageObj.crossOrigin = "Anonymous";
+                        }
                         imageObj.addEventListener("load", function () {
 
                             crop.setImage(imageObj);
