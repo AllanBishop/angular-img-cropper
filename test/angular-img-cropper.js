@@ -12,7 +12,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
             minHeight: "="
         },
         restrict: "A",
-        link: function (scope, element) {
+        link: function (scope, element, attrs) {
             var crop;
             var __extends = __extends || function (d, b) {
                     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -924,7 +924,9 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.vertSquashRatio = this.detectVerticalSquash(img);
                     this.draw(this.ctx);
                     var croppedImg = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
-                    scope.croppedImage = croppedImg.src;
+                    if(attrs.croppedImage !== undefined) {
+                      scope.croppedImage = croppedImg.src;
+                    }
 
                     if (scope.cropAreaBounds && this.imageSet) {
                         scope.cropAreaBounds = this.getCropBounds();
@@ -1170,7 +1172,9 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
 
                         if (crop.isImageSet() && this.currentlyInteracting) {
                             var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
-                            scope.croppedImage = img.src;
+                            if(attrs.croppedImage !== undefined) {
+                              scope.croppedImage = img.src;
+                            }
                             scope.$apply();
                         }
 
@@ -1225,7 +1229,9 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
 
                         if (this.currentlyInteracting == true) {
                             var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
-                            scope.croppedImage = img.src;
+                            if(attrs.croppedImage !== undefined) {
+                              scope.croppedImage = img.src;
+                            }
                             scope.$apply();
                         }
                         this.currentlyInteracting = false;
@@ -1249,11 +1255,16 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                 function (newValue) {
                     if (newValue != null) {
                         var imageObj = new Image();
+                        if(attrs.cors !== undefined && attrs.cors !== "no") {
+                          imageObj.crossOrigin = "Anonymous";
+                        }
                         imageObj.addEventListener("load", function () {
 
                             crop.setImage(imageObj);
                             var img = crop.getCroppedImage(scope.cropWidth, scope.cropHeight);
-                            scope.croppedImage = img.src;
+                            if(attrs.croppedImage !== undefined) {
+                              scope.croppedImage = img.src;
+                            }
                             scope.$apply();
                         }, false);
                         imageObj.src = newValue;
