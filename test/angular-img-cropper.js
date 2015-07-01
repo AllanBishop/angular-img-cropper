@@ -920,12 +920,30 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         PointPool.instance.returnPoint(blPos);
                         PointPool.instance.returnPoint(brPos);
                     }
+                    else
+                    {
+                        var imageW = Math.min(h, w);
+                        var cropH = imageW * cropAspect;
+                        tlPos = PointPool.instance.borrow(cX - imageW / 2, cY + cropH / 2);
+                        trPos = PointPool.instance.borrow(cX + imageW / 2, cY + cropH / 2);
+                        blPos = PointPool.instance.borrow(cX - imageW / 2, cY - cropH / 2);
+                        brPos = PointPool.instance.borrow(cX + imageW / 2, cY - cropH / 2);
+                        this.tl.setPosition(tlPos.x, tlPos.y);
+                        this.tr.setPosition(trPos.x, trPos.y);
+                        this.bl.setPosition(blPos.x, blPos.y);
+                        this.br.setPosition(brPos.x, brPos.y);
+                        PointPool.instance.returnPoint(tlPos);
+                        PointPool.instance.returnPoint(trPos);
+                        PointPool.instance.returnPoint(blPos);
+                        PointPool.instance.returnPoint(brPos);
+
+                    }
 
                     this.vertSquashRatio = this.detectVerticalSquash(img);
                     this.draw(this.ctx);
                     var croppedImg = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
                     if(attrs.croppedImage !== undefined) {
-                      scope.croppedImage = croppedImg.src;
+                        scope.croppedImage = croppedImg.src;
                     }
 
                     if (scope.cropAreaBounds && this.imageSet) {
@@ -1173,7 +1191,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         if (crop.isImageSet() && this.currentlyInteracting) {
                             var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
                             if(attrs.croppedImage !== undefined) {
-                              scope.croppedImage = img.src;
+                                scope.croppedImage = img.src;
                             }
                             scope.$apply();
                         }
@@ -1230,7 +1248,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         if (this.currentlyInteracting == true) {
                             var img = this.getCroppedImage(scope.cropWidth, scope.cropHeight);
                             if(attrs.croppedImage !== undefined) {
-                              scope.croppedImage = img.src;
+                                scope.croppedImage = img.src;
                             }
                             scope.$apply();
                         }
@@ -1256,14 +1274,14 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     if (newValue != null) {
                         var imageObj = new Image();
                         if(attrs.cors !== undefined && attrs.cors !== "no") {
-                          imageObj.crossOrigin = "Anonymous";
+                            imageObj.crossOrigin = "Anonymous";
                         }
                         imageObj.addEventListener("load", function () {
 
                             crop.setImage(imageObj);
                             var img = crop.getCroppedImage(scope.cropWidth, scope.cropHeight);
                             if(attrs.croppedImage !== undefined) {
-                              scope.croppedImage = img.src;
+                                scope.croppedImage = img.src;
                             }
                             scope.$apply();
                         }, false);
