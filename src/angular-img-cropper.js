@@ -901,39 +901,22 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         trPos = PointPool.instance.borrow(cX + cropW / 2, cY + imageH / 2);
                         blPos = PointPool.instance.borrow(cX - cropW / 2, cY - imageH / 2);
                         brPos = PointPool.instance.borrow(cX + cropW / 2, cY - imageH / 2);
-                        this.tl.setPosition(tlPos.x, tlPos.y);
-                        this.tr.setPosition(trPos.x, trPos.y);
-                        this.bl.setPosition(blPos.x, blPos.y);
-                        this.br.setPosition(brPos.x, brPos.y);
-                        PointPool.instance.returnPoint(tlPos);
-                        PointPool.instance.returnPoint(trPos);
-                        PointPool.instance.returnPoint(blPos);
-                        PointPool.instance.returnPoint(brPos);
-                    }
-                    else if (cropAspect < sourceAspect) {
+                    } else if (cropAspect < sourceAspect) {
                         var imageW = Math.min(h / sourceAspect, w);
                         var cropH = imageW * cropAspect;
                         tlPos = PointPool.instance.borrow(cX - imageW / 2, cY + cropH / 2);
                         trPos = PointPool.instance.borrow(cX + imageW / 2, cY + cropH / 2);
                         blPos = PointPool.instance.borrow(cX - imageW / 2, cY - cropH / 2);
                         brPos = PointPool.instance.borrow(cX + imageW / 2, cY - cropH / 2);
-                        this.tl.setPosition(tlPos.x, tlPos.y);
-                        this.tr.setPosition(trPos.x, trPos.y);
-                        this.bl.setPosition(blPos.x, blPos.y);
-                        this.br.setPosition(brPos.x, brPos.y);
-                        PointPool.instance.returnPoint(tlPos);
-                        PointPool.instance.returnPoint(trPos);
-                        PointPool.instance.returnPoint(blPos);
-                        PointPool.instance.returnPoint(brPos);
-                    }
-                    else
-                    {
+                    } else  {
                         var imageW = Math.min(h, w);
                         var cropH = imageW * cropAspect;
                         tlPos = PointPool.instance.borrow(cX - imageW / 2, cY + cropH / 2);
                         trPos = PointPool.instance.borrow(cX + imageW / 2, cY + cropH / 2);
                         blPos = PointPool.instance.borrow(cX - imageW / 2, cY - cropH / 2);
                         brPos = PointPool.instance.borrow(cX + imageW / 2, cY - cropH / 2);
+                    }
+
                         this.tl.setPosition(tlPos.x, tlPos.y);
                         this.tr.setPosition(trPos.x, trPos.y);
                         this.bl.setPosition(blPos.x, blPos.y);
@@ -943,33 +926,34 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         PointPool.instance.returnPoint(blPos);
                         PointPool.instance.returnPoint(brPos);
 
-                    }
-
                     if(scope.cropAreaBounds
                         && scope.cropAreaBounds.left !== undefined
                         && scope.cropAreaBounds.top !== undefined
                         && scope.cropAreaBounds.right !== undefined
                         && scope.cropAreaBounds.bottom !== undefined) {
+
+                      var canvasAspect = this.canvasHeight / this.canvasWidth;
+                      if (canvasAspect > sourceAspect) {
+                        w = this.canvasWidth;
+                        h = this.canvasWidth * sourceAspect;
+                      } else {
+                        h = this.canvasHeight;
+                        w = this.canvasHeight / sourceAspect;
+                      }
+                      this.ratioW = w / this.srcImage.width;
+                      this.ratioH = h / this.srcImage.height;
+
                       var bounds = new Bounds();
-                      bounds.top = Math.round((2*scope.cropAreaBounds.top*this.minYClamp - scope.cropAreaBounds.top*h)/this.srcImage.height + h - this.minYClamp);
-                      bounds.bottom = Math.round((2*scope.cropAreaBounds.bottom*this.minYClamp - scope.cropAreaBounds.bottom*h)/this.srcImage.height + h - this.minYClamp);
-                      bounds.left = Math.round(this.minXClamp + scope.cropAreaBounds.left * w / this.srcImage.width);
-                      bounds.right = Math.round((this.minXClamp + scope.cropAreaBounds.right) * w / this.srcImage.width);
+                      bounds.top = Math.round(h - this.minYClamp - this.ratioH*scope.cropAreaBounds.top);
+                      bounds.bottom = Math.round(h - this.minYClamp - this.ratioH*scope.cropAreaBounds.bottom);
+                      bounds.left = Math.round(this.ratioW*scope.cropAreaBounds.left + this.minXClamp);
+                      bounds.right = Math.round(this.ratioW*scope.cropAreaBounds.right + this.minXClamp);
 
-                      tlPos = PointPool.instance.borrow(bounds.left, bounds.top);
-                      trPos = PointPool.instance.borrow(bounds.right, bounds.top);
-                      blPos = PointPool.instance.borrow(bounds.left, bounds.bottom);
-                      brPos = PointPool.instance.borrow(bounds.right, bounds.bottom);
+                      this.tl.setPosition(bounds.left, bounds.top);
+                      this.tr.setPosition(bounds.right, bounds.top);
+                      this.bl.setPosition(bounds.left, bounds.bottom);
+                      this.br.setPosition(bounds.right, bounds.bottom);
 
-                      this.tl.setPosition(tlPos.x, tlPos.y);
-                      this.tr.setPosition(trPos.x, trPos.y);
-                      this.bl.setPosition(blPos.x, blPos.y);
-                      this.br.setPosition(brPos.x, brPos.y);
-
-                      PointPool.instance.returnPoint(tlPos);
-                      PointPool.instance.returnPoint(trPos);
-                      PointPool.instance.returnPoint(blPos);
-                      PointPool.instance.returnPoint(brPos);
                       this.center.setPosition(bounds.left+bounds.getWidth()/2, bounds.top+bounds.getHeight()/2);
                     }
 
