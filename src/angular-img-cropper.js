@@ -944,8 +944,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                       this.ratioH = h / this.srcImage.height;
 
                       var bounds = new Bounds();
-                      bounds.top = Math.round(h - this.minYClamp - this.ratioH*scope.cropAreaBounds.top);
-                      bounds.bottom = Math.round(h - this.minYClamp - this.ratioH*scope.cropAreaBounds.bottom);
+                      bounds.top = Math.round(h + this.minYClamp - this.ratioH*scope.cropAreaBounds.top);
+                      bounds.bottom = Math.round(h + this.minYClamp - this.ratioH*scope.cropAreaBounds.bottom);
                       bounds.left = Math.round(this.ratioW*scope.cropAreaBounds.left + this.minXClamp);
                       bounds.right = Math.round(this.ratioW*scope.cropAreaBounds.right + this.minXClamp);
 
