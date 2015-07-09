@@ -1277,7 +1277,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
             })();
 
             function setup(newValue, oldValue) {
-              if(newValue === oldValue) {
+              if(crop && newValue === oldValue) {
                 return;
               }
 
@@ -1317,7 +1317,6 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
               imageObj.src = newValue;
             }
 
-            setup(true);
             scope.$watch('cropWidth', setup);
             scope.$watch('cropHeight', setup);
             scope.$watch('keepAspect', setup);
