@@ -1086,9 +1086,13 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                 ImageCropper.prototype.onTouchMove = function (e) {
                     if (crop.isImageSet()) {
                         e.preventDefault();
-                        if (e.touches.length >= 1) {
-                            for (var i = 0; i < e.touches.length; i++) {
-                                var touch = e.touches[i];
+                        /**
+                         * fixes behaviour if event is wrapped by jquery
+                         */
+                        var touches = angular.isDefined(e.touches) ? e.touches : e.originalEvent.touches;
+                        if (touches.length >= 1) {
+                            for (var i = 0; i < touches.length; i++) {
+                                var touch = touches[i];
                                 var touchPosition = this.getTouchPos(this.canvas, touch);
                                 var cropTouch = new CropTouch(touchPosition.x, touchPosition.y, touch.identifier);
                                 PointPool.instance.returnPoint(touchPosition);
@@ -1194,8 +1198,12 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                 };
                 ImageCropper.prototype.onTouchEnd = function (e) {
                     if (crop.isImageSet()) {
-                        for (var i = 0; i < e.changedTouches.length; i++) {
-                            var touch = e.changedTouches[i];
+                        /**
+                         * fixes behaviour if event is wrapped by jquery
+                         */
+                        var changedTouches = angular.isDefined(e.changedTouches) ? e.changedTouches : e.originalEvent.changedTouches;
+                        for (var i = 0; i < changedTouches.length; i++) {
+                            var touch = changedTouches[i];
                             var dragTouch = this.getDragTouchForID(touch.identifier);
                             if (dragTouch != null) {
                                 if (dragTouch.dragHandle instanceof CornerMarker || dragTouch.dragHandle instanceof DragMarker) {
