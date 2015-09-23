@@ -9,7 +9,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
             touchRadius: "=",
             cropAreaBounds: "=",
             minWidth: "=",
-            minHeight: "="
+            minHeight: "=",
+            enforceCropAspect: "="
         },
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -379,6 +380,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.draw(this.ctx);
                     this.croppedImage = new Image();
                     this.currentlyInteracting = false;
+
+                    this.enforceCropAspect = scope.enforceCropAspect || !this.keepAspect;
 
                     angular.element(window)
                       .off('mousemove.angular-img-cropper mouseup.angular-img-cropper touchmove.angular-img-cropper touchend.angular-img-cropper')
@@ -973,6 +976,11 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     if (!this.srcImage) {
                         throw "Source image not set.";
                     }
+
+                    if (this.enforceCropAspect) {
+                        fillWidth = false;
+                    }
+
                     if (fillWidth && fillHeight) {
                         var sourceAspect = this.srcImage.height / this.srcImage.width;
                         var canvasAspect = this.canvas.height / this.canvas.width;
