@@ -408,6 +408,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         var canvasAspect = this.canvasHeight / this.canvasWidth;
                         var w = this.canvasWidth;
                         var h = this.canvasHeight;
+						var sx = 0;
+						var sy = 0;
                         if (canvasAspect > sourceAspect) {
                             w = this.canvasWidth;
                             h = this.canvasWidth * sourceAspect;
@@ -419,14 +421,15 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         this.ratioW = w / this.srcImage.width;
                         this.ratioH = h / this.srcImage.height;
                         if (canvasAspect < sourceAspect) {
-                            this.drawImageIOSFix(ctx, this.srcImage, 0, 0, this.srcImage.width, this.srcImage.height, this.buffer.width / 2 - w / 2, 0, w, h);
+							sx = this.buffer.width / 2 - w / 2;
                         }
                         else {
-                            this.drawImageIOSFix(ctx, this.srcImage, 0, 0, this.srcImage.width, this.srcImage.height, 0, this.buffer.height / 2 - h / 2, w, h);
+							sy = this.buffer.height / 2 - h / 2;
                         }
-                        this.buffer.getContext('2d').drawImage(this.canvas, 0, 0, this.canvasWidth, this.canvasHeight);
+						this.drawImageIOSFix(ctx, this.srcImage, 0, 0, this.srcImage.width, this.srcImage.height, sx, sy, w, h);
+						this.buffer.getContext('2d').drawImage(this.canvas, 0, 0, this.canvasWidth, this.canvasHeight);
                         ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-                        ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+                        ctx.fillRect(sx, sy, w, h);
                         ctx.drawImage(this.buffer, bounds.left, bounds.top, Math.max(bounds.getWidth(), 1), Math.max(bounds.getHeight(), 1), bounds.left, bounds.top, bounds.getWidth(), bounds.getHeight());
                         var marker;
                         for (var i = 0; i < this.markers.length; i++) {
