@@ -14,7 +14,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
         },
         restrict: "A",
         link: function (scope, element, attrs) {
-            var crop;
+            var crop, destroyed = false;
             var __extends = __extends || function (d, b) {
                     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
                     function __() {
@@ -24,6 +24,10 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     __.prototype = b.prototype;
                     d.prototype = new __();
                 };
+
+            scope.$on('$destroy', function() {
+                destroyed = true;
+            });
 
             var Handle = (function () {
                 function Handle(x, y, radius) {
@@ -1092,7 +1096,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     return PointPool.instance.borrow(touch.clientX - rect.left, touch.clientY - rect.top);
                 };
                 ImageCropper.prototype.onTouchMove = function (e) {
-                    if (crop.isImageSet()) {
+                    if (!destroyed && crop.isImageSet()) {
                         e.preventDefault();
                         /**
                          * fixes behaviour if event is wrapped by jquery
