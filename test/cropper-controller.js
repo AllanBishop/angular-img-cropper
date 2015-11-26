@@ -9,4 +9,7 @@ angular.module('app').controller("ImageCropperCtrl",[ '$scope', function($scope)
         $scope.bounds.right = 0;
         $scope.bounds.top = 0;
         $scope.bounds.bottom = 0;
+        $scope.width = 100;
+        $scope.height = 200;
+        $scope.keepaspect = false;
 }]);
