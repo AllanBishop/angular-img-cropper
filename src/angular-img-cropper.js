@@ -1147,7 +1147,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                             didDraw = didDraw || this.drawCornerCursor(this.markers[i], cropTouch.x, cropTouch.y, e);
                         }
                         if (!didDraw) {
-                            imageCropperDataShare.setStyle(this.canvas, 'initial');
+                            imageCropperDataShare.setStyle(this.canvas, 'default');
                         }
                     }
                     if (!didDraw && !cursorDrawn && this.center.touchInBounds(cropTouch.x, cropTouch.y)) {
