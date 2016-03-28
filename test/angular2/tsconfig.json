@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "out": "./ng2-test-app.js",
+    "target": "es5",
+    "module": "system",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": false
+  },
+  "buildOnSave": true,
+
+  "filesGlob": [
+   "./main.ts",
+   "./app.ts"
+  ],
+   "atom": { "rewriteTsconfig": false }
+}

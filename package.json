@@ -1,11 +1,40 @@
 {
   "name": "angular-img-cropper",
   "version": "1.0.0",
+  "scripts": {
+    "all": "concurrently \"npm run watch\" \"npm run watch-test\" \"npm run lite\" ",
+    "watch": "tsc -p src -w ",
+    "watch-test": "tsc -p test/angular2 -w ",
+    "build": "rm -rf dist && tsc -p src",
+    "clean": "rm -rf dist",
+    "lite": "lite-server"
+  },
+  "keywords": [
+    "Angular",
+    "2",
+    "Image",
+    "Cropper"
+  ],
   "devDependencies": {
+    "typescript": "1.8.9",
+    "concurrently": "^2.0.0",
+    "lite-server": "^2.1.0",
+    "typings": "^0.7.9",
     "grunt": "0.4.1",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-uglify": "0.2.0",
     "grunt-contrib-watch": "^0.6.1",
     "install": "^0.1.8"
+  },
+  "dependencies": {
+
+    "angular2": "2.0.0-beta.9",
+    "systemjs": "0.19.24",
+    "rxjs": "^5.0.0-beta.0",
+    "es6-promise": "^3.0.2",
+    "es6-shim": "^0.33.3",
+    "reflect-metadata": "0.1.2",
+    "zone.js": "0.5.15"
+
   }
 }

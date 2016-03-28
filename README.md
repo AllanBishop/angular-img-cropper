@@ -93,7 +93,15 @@ angular.module('myApp', ['angular-img-cropper']);
 </html>
 ```
 
+## Building AngularJS 2 Component and running test app
+
+```bash
+npm install
+npm run all
+```
+
 
 ## License
 
 See the [LICENSE](https://github.com/AllanBishop/ImageCropper/blob/master/LICENSE.md) file.
+
