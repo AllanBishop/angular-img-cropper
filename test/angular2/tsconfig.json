@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "out": "./dist/ImageCropperComponent.js",
+    "out": "./ng2-test-app.js",
     "target": "es5",
     "module": "system",
     "moduleResolution": "node",
@@ -11,15 +11,10 @@
     "noImplicitAny": false
   },
   "buildOnSave": true,
-  "exclude": [
-    "node_modules",
-    "typings/main",
-    "typings/main.d.ts"
-  ],
+
   "filesGlob": [
-   "./**/imageCropper.ts",
-   "./**/imageCropperDataShare.ts",
-   "!./node_modules/**/*.ts"
+   "./main.ts",
+   "./app.ts"
   ],
    "atom": { "rewriteTsconfig": false }
 }

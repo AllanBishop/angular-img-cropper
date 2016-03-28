@@ -8,7 +8,6 @@ import {Bounds} from './model/bounds';
 import {CornerMarker} from './model/cornerMarker';
 import {DragMarker} from './model/dragMarker';
 import {CropTouch} from './model/cropTouch';
-import {CropperSettings} from './model/cropperSettings';
 
 import {ImageCropperDataShare} from './imageCropperDataShare';
 
@@ -16,14 +15,16 @@ import {ImageCropperDataShare} from './imageCropperDataShare';
 @Component({
   selector: 'img-cropper',
   template: `
-    <input type="file" (change)="fileChangeListener($event)">
-    <canvas #mycanvas
-            (mousedown)="onMouseDown($event)"
-            (mouseup)="onMouseUp($event)"
-            (mousemove)="onMouseMove($event)"
-            (touchmove)="onTouchMove($event)"
-            (touchend)="onTouchEnd($event)">
-    </canvas>
+    <span class="ng2-imgcrop">
+      <input type="file" (change)="fileChangeListener($event)">
+      <canvas #mycanvas
+              (mousedown)="onMouseDown($event)"
+              (mouseup)="onMouseUp($event)"
+              (mousemove)="onMouseMove($event)"
+              (touchmove)="onTouchMove($event)"
+              (touchend)="onTouchEnd($event)">
+      </canvas>
+    </span>
   `,
   inputs: ['image', 'settings']
 })
@@ -33,7 +34,6 @@ export class ImageCropperComponent {
 
   private cropper: ImageCropper;
   private renderer: Renderer;
-
 
   image: any;
   croppedWidth: number;
@@ -47,11 +47,9 @@ export class ImageCropperComponent {
 
   ngAfterViewInit() {
     var canvas: any = this.myCanvas.nativeElement;
-    console.log('reading data...', this.settings);
 
     if (!this.settings) {
       this.settings = new CropperSettings();
-      console.log('initialized?')
     }
 
     this.renderer.setElementAttribute(canvas, 'width', this.settings.canvasWidth.toString());
@@ -68,11 +66,9 @@ export class ImageCropperComponent {
   }
 
   onMouseUp($event): void {
-    if (this.cropper.isImageSet) {
+    if (this.cropper.isImageSet()) {
       this.cropper.onMouseUp($event);
       this.image.image = this.cropper.getCroppedImage().src;
-    } else {
-
     }
   }
 
@@ -96,6 +92,26 @@ export class ImageCropperComponent {
 
 }
 
+
+export class CropperSettings {
+  canvasWidth: number;
+  canvasHeight: number;
+
+  width: number;
+  height: number;
+
+  croppedWidth: number;
+  croppedHeight: number;
+
+  constructor() {
+    this.canvasWidth = 300;
+    this.canvasHeight = 300;
+    this.width = 200;
+    this.height = 200;
+    this.croppedWidth = 100;
+    this.croppedHeight = 100;
+  }
+}
 
 export class ImageCropperModel {
   protected canvas: HTMLCanvasElement;
@@ -214,7 +230,6 @@ export class ImageCropper extends ImageCropperModel {
     this.cropWidth = croppedWidth;
     this.cropHeight = croppedHeight;
 
-    console.log(this.cropWidth, this.cropHeight);
 
     //TODO:check
     /*
