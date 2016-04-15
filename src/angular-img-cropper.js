@@ -380,17 +380,26 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.croppedImage = new Image();
                     this.currentlyInteracting = false;
 
-                    angular.element(window)
-                      .off('mousemove.angular-img-cropper mouseup.angular-img-cropper')
-                      .on('mousemove.angular-img-cropper', this.onMouseMove.bind(this))
-                      .on('mouseup.angular-img-cropper', this.onMouseUp.bind(this));
+                    if (window.jQuery) {
+                        angular.element(window)
+                          .off('mousemove.angular-img-cropper mouseup.angular-img-cropper')
+                          .on('mousemove.angular-img-cropper', this.onMouseMove.bind(this))
+                          .on('mouseup.angular-img-cropper', this.onMouseUp.bind(this));
 
-                    angular.element(canvas)
-                      .off('mousedown.angular-img-cropper touchstart.angular-img-cropper  touchmove.angular-img-cropper touchend.angular-img-cropper')
-                      .on('mousedown.angular-img-cropper', this.onMouseDown.bind(this))
-                      .on('touchstart.angular-img-cropper', this.onTouchStart.bind(this))
-                      .on('touchmove.angular-img-cropper', this.onTouchMove.bind(this))
-                      .on('touchend.angular-img-cropper', this.onTouchEnd.bind(this));
+                        angular.element(canvas)
+                          .off('mousedown.angular-img-cropper touchstart.angular-img-cropper  touchmove.angular-img-cropper touchend.angular-img-cropper')
+                          .on('mousedown.angular-img-cropper', this.onMouseDown.bind(this))
+                          .on('touchstart.angular-img-cropper', this.onTouchStart.bind(this))
+                          .on('touchmove.angular-img-cropper', this.onTouchMove.bind(this))
+                          .on('touchend.angular-img-cropper', this.onTouchEnd.bind(this));
+                    } else {
+                        window.addEventListener('mousemove', this.onMouseMove.bind(this));
+                        window.addEventListener('mouseup', this.onMouseUp.bind(this));
+                        canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
+                        canvas.addEventListener('touchmove', this.onTouchMove.bind(this), false);
+                        canvas.addEventListener('touchstart', this.onTouchStart.bind(this), false);
+                        canvas.addEventListener('touchend', this.onTouchEnd.bind(this), false);
+                    }
                 }
 
                 ImageCropper.prototype.resizeCanvas = function (width, height) {
