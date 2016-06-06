@@ -9,7 +9,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
             touchRadius: "=",
             cropAreaBounds: "=",
             minWidth: "=",
-            minHeight: "="
+            minHeight: "=",
+            enforceFileType: "@"
         },
         restrict: "A",
         link: function (scope, element, attrs) {
@@ -350,7 +351,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.isMouseDown = false;
                     this.ratioW = 1;
                     this.ratioH = 1;
-                    this.fileType = 'png';
+                    this.fileType = 'image/png';
                     this.imageSet = false;
                     this.pointPool = new PointPool(200);
                     CropService.init(canvas);
@@ -379,6 +380,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.draw(this.ctx);
                     this.croppedImage = new Image();
                     this.currentlyInteracting = false;
+
+                    this.enforceFileType = scope.enforceFileType ? 'image/' + scope.enforceFileType : undefined;
 
                     angular.element(window)
                       .off('mousemove.angular-img-cropper mouseup.angular-img-cropper touchmove.angular-img-cropper touchend.angular-img-cropper')
@@ -857,7 +860,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                 ImageCropper.prototype.isImageSet = function () {
                     return this.imageSet;
                 };
-                ImageCropper.prototype.setImage = function (img) {
+                ImageCropper.prototype.setImage = function (img, srcFileType) {
                     if (!img) {
                         throw "Image is null";
                     }
@@ -865,10 +868,10 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                     var bufferContext = this.buffer.getContext('2d');
                     bufferContext.clearRect(0, 0, this.buffer.width, this.buffer.height);
-                    var splitName = img.src.split('.');
-                    var fileType = splitName[1];
-                    if (fileType == 'png' || fileType == 'jpg') {
-                        this.fileType = fileType;
+                    if (this.enforceFileType) {
+                        this.fileType = this.enforceFileType;
+                    } else if (srcFileType == 'image/png' || srcFileType == 'image/jpeg') {
+                        this.fileType = srcFileType;
                     }
                     this.srcImage = img;
                     this.updateClampBounds();
@@ -1007,7 +1010,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         this.croppedImage.width = this.cropCanvas.width;
                         this.croppedImage.height = this.cropCanvas.height;
                     }
-                    this.croppedImage.src = this.cropCanvas.toDataURL("image/" + this.fileType);
+                    this.croppedImage.src = this.cropCanvas.toDataURL(this.fileType);
                     return this.croppedImage;
                 };
                 ImageCropper.prototype.getBounds = function () {
@@ -1292,8 +1295,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
 
               $(canvas).data('crop.angular-img-cropper', crop);
 
-              if(oldImage) {
-                crop.setImage(oldImage);
+              if (oldImage) {
+                crop.setImage(oldImage, scope.image.fileType);
               } else {
                 load(scope.image);
               }
@@ -1311,10 +1314,10 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
               }
 
               imageObj.addEventListener("load", function () {
-                crop.setImage(imageObj);
-                scope.$apply();
+                  crop.setImage(imageObj, newValue.fileType);
+                  scope.$apply();
               }, false);
-              imageObj.src = newValue;
+              imageObj.src = newValue.imageData;
             }
 
             scope.$watch('cropWidth', setup);
@@ -1335,12 +1338,18 @@ angular.module('angular-img-cropper').directive("imgCropperFileread", ['$timeout
         link: function (scope, element) {
             element.bind("change", function (changeEvent) {
                 var reader = new FileReader();
+                var eventThis = this;
                 reader.onload = function (loadEvent) {
                     $timeout(function () {
-                        scope.image = loadEvent.target.result;
+                        var thisHook = eventThis;
+                        scope.image = {
+                            'imageData': loadEvent.target.result,
+                            'fileType': thisHook.fileType
+                        };
                     }, 0);
                 };
                 if (changeEvent.target.files[0]) {
+                    eventThis.fileType = changeEvent.target.files[0].type;
                     reader.readAsDataURL(changeEvent.target.files[0]);
                 }
             });
