@@ -19,7 +19,6 @@
   "license": "MIT",
   "ignore": [
     "node_modules",
-    "src",
     "test",
 	"package.json",
 	"gruntfile.js",
